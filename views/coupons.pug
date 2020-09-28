@@ -25,7 +25,7 @@ block content
               th.align-middle(scope='row') #{index+1}
               td.align-middle #{val.name}
               td.align-middle #{val.minCartValue}
-              td.align-middle #{val.flatDiscount ? val.flatDiscount : val.percentageDiscount}
+              td.align-middle #{val.flatDiscount ? val.flatDiscount+'/-' : val.percentageDiscount+'%'}
               td.align-middle #{val.startDate.toLocaleDateString("en-US")}
               td.align-middle #{val.endDate.toLocaleDateString("en-US")}
               td.align-middle
