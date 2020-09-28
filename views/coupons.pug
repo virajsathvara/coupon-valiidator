@@ -1,0 +1,38 @@
+extends layout
+
+block content
+  .container
+    .row
+      .coupon-header
+        h1 COUPONS
+        .coupon-add
+          a.btn.btn-outline-primary.btn-lg(href='/coupons/new') Add
+
+    .row
+      table.table
+        thead
+          tr
+            th(scope='col') #
+            th(scope='col') Code
+            th(scope='col') Min Cart Value
+            th(scope='col') Discount
+            th(scope='col') Start Date
+            th(scope='col') End Date
+            th(scope='col') Delete
+        tbody
+          each val, index in coupons
+            tr
+              th.align-middle(scope='row') #{index+1}
+              td.align-middle #{val.name}
+              td.align-middle #{val.minCartValue}
+              td.align-middle #{val.flatDiscount ? val.flatDiscount : val.percentageDiscount}
+              td.align-middle #{val.startDate.toLocaleDateString("en-US")}
+              td.align-middle #{val.endDate.toLocaleDateString("en-US")}
+              td.align-middle
+                form(action='/coupons/delete' method='POST')
+                  .form-group
+                    input#price.form-control(type='hidden' value=val.name name="name")
+                  .form-group  
+                    button.btn.btn-link(type='submit')
+                      i.far.fa-trash-alt
+

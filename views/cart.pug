@@ -1,0 +1,37 @@
+extends layout
+
+block content
+  .container
+    h1 CART
+    p Welcome to cart
+
+  .container
+    .row
+      .col-md-4
+        .card
+          .card-body
+            h5.card-title #{product.name}
+            h3.card-text
+              if discountedPrice > 0
+                | INR #{discountedPrice} 
+              else
+                | INR #{product.price}
+            form(action='/coupons/validate' method='POST')
+              .form-group
+                input#price.form-control(type='hidden' value=product.price name="price")
+              .form-group
+                input#price.form-control(type='hidden' value=product.name name="name")
+              .form-group
+                input#price.form-control(type='hidden' value=product._id name="id")  
+              .form-group
+                label(for='couponCode') Got CouponCode?
+                input#couponCode.form-control(type='text' placeholder='MNOP' name="code")
+                if discountedPrice > 0
+                  p.text-success 
+                    | Discount Applied!!
+
+                if discountedPrice < 0
+                  p.text-danger 
+                    | Discount Coupon Invalid!!
+
+                button.btn.btn-dark.mb-2(type='submit') Apply
