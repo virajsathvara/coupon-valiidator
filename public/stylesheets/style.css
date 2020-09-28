@@ -1,0 +1,35 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.btn {
+  margin-top: 5px;
+}
+
+.products.row {
+  margin-top: 50px;
+}
+
+.container {
+  margin-top: 50px;
+}
+
+.table td, .table th {
+  text-align: center;
+}
+
+.coupon-header {
+    padding: 10px;
+    flex-direction: row;
+    display: flex;
+}
+
+.coupon-add {
+    margin: auto;
+    padding-left: 10px
+}
