@@ -104,12 +104,12 @@ router.post('/', function (req, res, next) {
   console.log(req.body);
   const couponsCollection = req.app.db.collection('coupons');
   const schema = Joi.object().keys({
-    name: Joi.string().alphanum().min(3).max(30).required(),
-    startDate: Joi.required(),
-    endDate: Joi.required(),
-    minCartValue: Joi.optional(),
-    flatDiscount: Joi.optional(),
-    percentageDiscount: Joi.optional(),
+    name: Joi.string().alphanum().min(4).max(6).required().error(new Error('Coupon Code should be of 3 to 6 characters.')),
+    minCartValue: Joi.number().required().error(new Error('Minimum Cart Value should be a valid number.')),
+    startDate: Joi.date().iso().required().error(new Error('Start Date should not be empty.')),
+    endDate: Joi.date().iso().greater(Joi.ref('startDate')).required().error(new Error('End Date should fall after the start date and not empty.')),
+    flatDiscount: Joi.number().required().error(new Error('Flat Discount should be a valid number.')),
+    percentageDiscount: Joi.number().min(0).max(100).required().error(new Error('Percentage Discount should be a valid number between 0 to 100.')),
   });
 
   const { value, error } = schema.validate(req.body);
@@ -117,9 +117,10 @@ router.post('/', function (req, res, next) {
     /* res.render('404', {
       error: 'Invalid request'
     }); */
-    console.log(req.session, error);
-    req.session.product.finalPrice = -1;
-    res.redirect(`/cart/${req.body.id}/invalidCode`);
+    console.log("error====================", error);
+    if (req.session.product)
+      req.session.product.finalPrice = -1;
+    res.render(`addcoupon`, { message: error, data: req.body });
   } else {
     const couponToBeAdded = {
       name: req.body.name,
@@ -137,7 +138,7 @@ router.post('/', function (req, res, next) {
     couponsCollection.insertOne(couponToBeAdded)
       .then(result => {
         console.log(result);
-        res.redirect(`/`);
+        res.redirect(`/coupons`);
       })
       .catch(error => {
         res.redirect(`/404`);

@@ -2,18 +2,20 @@ extends layout
 
 block content
   .container
-    h1 #{edit ? "Edit your Coupon" : "Add new coupon"}
-
+    h1 Add new coupon
+    if message
+      p.text-danger 
+        | #{message}
   .container
     .row
       .col-md-4
         form(action='/coupons/' method='POST')
           .form-group
             label(for='name') Coupon Code
-            input#name.form-control(type='text' placeholder=`${edit ? data.name : "MNOP"}` name="name")
+            input#name.form-control(type='text' value=`${data ? data.name : ""}` name="name")
           .form-group
             label(for='name') Minimum Cart Value
-            input#minCartValue.form-control(type='number' placeholder=`${edit ? data.minCartValue : 0}` name="minCartValue")  
+            input#minCartValue.form-control(type='number' value=`${data ? data.minCartValue : 0}` name="minCartValue")  
           .form-group
             label(for='startDate') Start Date
             input#startDate.form-control(type='date' name="startDate")
@@ -22,9 +24,9 @@ block content
             input#endDate.form-control(type='date' name="endDate")
           .form-group
             label(for='name') Flat Discount
-            input#flatDiscount.form-control(type='number' placeholder=`${edit ? data.flatDiscount : 0}` name="flatDiscount")
+            input#flatDiscount.form-control(type='number' value=`${data ? data.flatDiscount : 0}` name="flatDiscount")
           .form-group
             label(for='name') Percentage Discount
-            input#percentageDiscount.form-control(type='number' placeholder=`${edit ? data.percentageDiscount : 0}` name="percentageDiscount")
+            input#percentageDiscount.form-control(type='number' value=`${data ? data.percentageDiscount : 0}` name="percentageDiscount")
           .form-group  
             button.btn.btn-dark.mb-2(type='submit') Apply
