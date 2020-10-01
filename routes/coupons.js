@@ -59,19 +59,24 @@ router.post('/validate', function (req, res, next) {
     couponsCollection.findOne({ name: req.body.code })
       .then(result => {
         let finalPrice = req.body.price;
+        let discount;
         console.log("coupon is: ", result);
         if (req.body.price >= result.minCartValue &&
           date >= new Date(result.startDate) &&
           date <= new Date(result.endDate)) {
-          if (result.flatDisApplicable)
-            finalPrice = finalPrice - result.flatDiscount;
-          if (result.percentageDisApplicable) {
+          if (result.flatDiscount > 0)
+            discount = result.flatDiscount;
+          if (result.percentageDiscount > 0) {
             console.log('final discount: ', finalPrice * result.percentageDiscount / 100);
-            finalPrice = finalPrice - (finalPrice * result.percentageDiscount / 100);
+            discount = finalPrice * result.percentageDiscount / 100;
+          }
+          try {
+            if (req.session.product.name === req.body.name)
+              req.session.product.finalPrice = discount;
+          } catch (error) {
+            res.render('404', { error: 'session expired' });
           }
 
-          if (req.session.product.name === req.body.name)
-            req.session.product.finalPrice = finalPrice;
 
           res.redirect(`/cart/${req.body.id}/${result.name}`);
         }
@@ -130,8 +135,8 @@ router.post('/', function (req, res, next) {
       flatDiscount: parseInt(req.body.flatDiscount),
       percentageDiscount: parseInt(req.body.percentageDiscount),
     };
-    couponToBeAdded.flatDisApplicable = parseInt(req.body.flatDiscount) ? true : false;
-    couponToBeAdded.percentageDisApplicable = parseInt(req.body.percentageDisApplicable) ? true : false;
+    //couponToBeAdded.flatDisApplicable = (couponToBeAdded.flatDiscount > 0);
+    //couponToBeAdded.percentageDisApplicable = (couponToBeAdded.percentageDiscount > 0);
 
     console.log('final item: ', couponToBeAdded);
 

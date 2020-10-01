@@ -13,7 +13,7 @@ block content
             h5.card-title #{product.name}
             h3.card-text
               if discountedPrice > 0
-                | INR #{discountedPrice} 
+                | INR <del>#{product.price}/-</del> #{product.price-discountedPrice}/-
               else
                 | INR #{product.price}
             form(action='/coupons/validate' method='POST')
@@ -28,7 +28,7 @@ block content
                 input#couponCode.form-control(type='text' placeholder='MNOP' name="code")
                 if discountedPrice > 0
                   p.text-success 
-                    | Discount Applied!!
+                    | INR#{discountedPrice}/- Discount Applied!!
 
                 if discountedPrice < 0
                   p.text-danger 
